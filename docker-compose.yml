@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+  billing_producer:
+    build: ./billing_producer
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=subscriptions
+      - POSTGRES_HOST=postgres
+      - KAFKA_HOST=kafka:9092
+    depends_on:
+      - postgres
+      - kafka
+    command: dotnet run
+
+  billing_consumer:
+    build: ./billing_consumer
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=subscriptions
+      - POSTGRES_HOST=postgres
+      - KAFKA_HOST=kafka:9092
+    depends_on:
+      - postgres
+      - kafka
+    command: dotnet run
+
+  postgres:
+    image: postgres:13.1
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=subscriptions
+    ports:
+      - "5432:5432"
+
+  kafka:
+    image: wurstmeister/kafka
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_HOST_NAME=127.0.0.1
+    ports: 
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+  
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
