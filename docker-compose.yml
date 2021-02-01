@@ -13,8 +13,8 @@ services:
       - kafka
     command: dotnet run
 
-  billing_consumer:
-    build: ./billing_consumer
+  billing_charger:
+    build: ./billing_charger
     environment:
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=postgres
