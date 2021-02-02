@@ -18,6 +18,12 @@ create table general_ledger (
 	primary key (id)
 );
 
+create table subscription_retries (
+	id bigint, 
+	subscription_id bigint,
+	next_try_at timestamp,
+	primary key (id)
+);
 
 create table comments (
 	id bigint,
@@ -27,9 +33,15 @@ create table comments (
 	primary key(id)
 );
 
+
 insert into subscriptions values
   (1, 9.99, 23, current_timestamp), 
   (2, 10.00, 23, current_timestamp), 
   (3, 99.01, 23, current_timestamp);
+
+
+kafka-topics --create --topic billing --bootstrap-server localhost:9092
+kafka-topics --create --topic declined --bootstrap-server localhost:9092
+kafka-topics --create --topic declined --bootstrap-server localhost:9092
 
 ```
