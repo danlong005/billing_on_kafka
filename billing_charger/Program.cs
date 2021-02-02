@@ -31,6 +31,20 @@ namespace billing_charger
                     {
                         ConsumeResult<Ignore, string> consumeResult = consumer.Consume(cts.Token);
                         Console.WriteLine($"Message Received: {consumeResult.Message.Value}");
+                        
+                        /*
+                         * Here we need to charge the payment
+                         */
+
+                        /*
+                         * if approved put the subscription in the approved 
+                         * queue.
+                         */
+
+                        /*
+                         * if declined put the subscription in the declined queue
+                         */
+
                     }
                     catch (ConsumeException ex)
                     {
