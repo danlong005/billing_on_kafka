@@ -9,7 +9,8 @@ namespace billing_charger.Models
         public int DueDay;
         public DateTime PaidTo;
         public string Charger;
-        public string ApprovalCallback;
-        public string DeclinedCallback;
+        public string ApprovalQueuer;
+        public string DeclinedQueurer;
+        public string TimedoutQueuer;
     }
 }

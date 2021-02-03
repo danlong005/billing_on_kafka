@@ -43,17 +43,27 @@ namespace billing_charger
                         {
                             case ChargerStatus.APPROVED:
                                 IApprovalQueuer approvalQueuer =
-                                    ApprovalQueuerFactory.Create(transaction.Subscription.ApprovalCallback);
+                                    ApprovalQueuerFactory.Create(transaction.Subscription.ApprovalQueuer);
                                 approvalQueuer.queue(transaction);
                                 break;
                             
                             case ChargerStatus.TIMED_OUT:
+                                if (transaction.Subscription.TimedoutQueuer.Equals(""))
+                                {
+                                    // stuff right back in the billing queue
+                                } else {
+                                    // get the queuer and let it do it's work
+                                }
                                 break;
-                            
+
+                            case ChargerStatus.NON_COMPLETED:
+                                // DO NOTHING the charge response will come via a webhook later on
+                                break;
+
                             default:
                                 // DECLINED
                                 IDeclinedQueuer declinedQueuer =
-                                    DeclinedQueuerFactory.Create(transaction.Subscription.DeclinedCallback);
+                                    DeclinedQueuerFactory.Create(transaction.Subscription.DeclinedQueurer);
                                 declinedQueuer.queue(transaction);
                                 break;
                         }

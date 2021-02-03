@@ -4,6 +4,7 @@ namespace billing_charger.Entity
     {
         DECLINED, 
         APPROVED,
-        TIMED_OUT
+        TIMED_OUT,
+        NON_COMPLETED
     }
 }
