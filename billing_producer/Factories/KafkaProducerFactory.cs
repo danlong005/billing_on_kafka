@@ -6,7 +6,7 @@ namespace billing_producer.Factories
     {
         private static IProducer<Null, string> producer;
 
-        public static IProducer<Null, string> create()
+        public static IProducer<Null, string> Create()
         {
             ProducerConfig config = new ProducerConfig
             {

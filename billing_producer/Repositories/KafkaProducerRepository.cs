@@ -4,16 +4,16 @@ using Confluent.Kafka;
 
 namespace billing_producer.Repositories
 {
-    public class KafkaRepository
+    public class KafkaProducerRepository
     {
         private IProducer<Null, string> producer;
 
-        public KafkaRepository()
+        public KafkaProducerRepository()
         {
-            producer = KafkaProducerFactory.create();
+            producer = KafkaProducerFactory.Create();
         }
 
-        public void create(string topic, string message)
+        public void Create(string topic, string message)
         {
             Console.WriteLine(message);
             Message<Null, string> msg = new Message<Null, string>()

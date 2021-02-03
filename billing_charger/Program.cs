@@ -3,7 +3,9 @@ using System.Threading;
 using billing_charger.Entity;
 using billing_charger.Factories;
 using billing_charger.Models;
-using billing_charger.Services;
+using billing_charger.Queuers.Approvals;
+using billing_charger.Queuers.Declines;
+using billing_charger.Services.Chargers;
 using Confluent.Kafka;
 using Newtonsoft.Json;
 
@@ -14,7 +16,6 @@ namespace billing_charger
         static void Main(string[] args)
         {
             IConsumer<Ignore, string> consumer = KafkaConsumerFactory.Create();
-            ChargingService chargingService = ChargingServiceFactory.Create();
             
             consumer.Subscribe("billing");
 
@@ -34,38 +35,26 @@ namespace billing_charger
                         Subscription subscription =
                             JsonConvert.DeserializeObject<Subscription>(consumeResult.Message.Value);
                         
-                        /*
-                         * TODO
-                         * 
-                         * if the subscription defines the chargingService then subscriptions
-                         * could go to all different chargingService
-                         * i.e. something like paypal that really just tells you when the
-                         * charge failed you could queue to a charger that just approves
-                         * and then the approval processor can make the entry in the GL. The
-                         * paypal webhook would then dump into a decline queue to backout the GL
-                         * entry and update the subscription
-                         *
-                         * Learn the resolver pattern to make this happen
-                         */
-                        ChargingResponse chargingResponse = chargingService.Charge(subscription);
+                        IChargerService chargerService = ChargerServiceFactory.Create(subscription.Charger);
+                        Transaction transaction = new Transaction(subscription);
+                        transaction.ChargerResponse = chargerService.Charge(transaction.Subscription);
                         
-                        switch (chargingResponse.Status)
+                        switch (transaction.ChargerResponse.Status)
                         {
-                            case ChargingService.ChargingStatus.APPROVED:
-                                /*
-                                 * TODO
-                                 * 
-                                 * using the resolver pattern we could determine what approvalProcessor
-                                 * to run after the charge is approved. This would allow flexibility for
-                                 * different billings(i.e. Associates/Memberships/Groups)
-                                 */
+                            case ChargerStatus.APPROVED:
+                                IApprovalQueuer approvalQueuer =
+                                    ApprovalQueuerFactory.Create(transaction.Subscription.ApprovalCallback);
+                                approvalQueuer.queue(transaction);
                                 break;
                             
-                            case ChargingService.ChargingStatus.TIMED_OUT:
+                            case ChargerStatus.TIMED_OUT:
                                 break;
                             
                             default:
                                 // DECLINED
+                                IDeclinedQueuer declinedQueuer =
+                                    DeclinedQueuerFactory.Create(transaction.Subscription.DeclinedCallback);
+                                declinedQueuer.queue(transaction);
                                 break;
                         }
                     }

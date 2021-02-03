@@ -7,6 +7,10 @@ create table subscriptions (
 	amount_due decimal(15,2),
 	due_day integer,
 	paid_to timestamp,
+	charger varchar(50),
+	approval_callback varchar(50),
+	declined_callback varchar(50),
+	timeout_callback varchar(50),
 	primary key (id)
 );
 
@@ -35,13 +39,13 @@ create table comments (
 
 
 insert into subscriptions values
-  (1, 9.99, 23, current_timestamp), 
-  (2, 10.00, 23, current_timestamp), 
-  (3, 99.01, 23, current_timestamp);
+  (1, 9.99, 23, current_timestamp, 'fake', 'simple', 'simple', ''), 
+  (2, 10.00, 23, current_timestamp, 'fake', 'simple', 'simple', ''), 
+  (3, 99.01, 23, current_timestamp, 'fake', 'simple', 'simple', '');
 
 
 kafka-topics --create --topic billing --bootstrap-server localhost:9092
-kafka-topics --create --topic declined --bootstrap-server localhost:9092
-kafka-topics --create --topic declined --bootstrap-server localhost:9092
+kafka-topics --create --topic decline_simple --bootstrap-server localhost:9092
+kafka-topics --create --topic approval_simple --bootstrap-server localhost:9092
 
 ```

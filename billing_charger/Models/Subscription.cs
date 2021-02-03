@@ -8,5 +8,8 @@ namespace billing_charger.Models
         public decimal AmountDue;
         public int DueDay;
         public DateTime PaidTo;
+        public string Charger;
+        public string ApprovalCallback;
+        public string DeclinedCallback;
     }
 }
