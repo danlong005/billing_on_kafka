@@ -1,5 +1,14 @@
 # Billing On Kafka
 
+# Notes
+Kafka can function as a pub/sub queue or a shared message queue. Default is to function as a
+pub/sub queue. However, you can change that by having the consumers of the topic to share
+a group id. This changes the function to a shared message queue. The messages are split out
+between the different partitions. The partitions are allocated as evenly as possible over the 
+consumers within the group.
+
+We can alter a topic to have more partitions if neccessary. 
+
 # SQL to setup the tables
 ```
 create table subscriptions (
