@@ -5,12 +5,12 @@ namespace billing_charger.Entity
 {
     public class Transaction
     {
-        public Subscription Subscription;
+        public Collectible Collectible;
         public ChargerResponse ChargerResponse;
 
-        public Transaction(Subscription subscription)
+        public Transaction(Collectible collectible)
         {
-            Subscription = subscription;
+            Collectible = collectible;
         }
     }
 }

@@ -1,33 +1,19 @@
-using billing_charger.Services.Chargers;
+using billing_charger.Chargers;
 
 namespace billing_charger.Factories
 {
-    public static class ChargerServiceFactory
+  public static class ChargerServiceFactory
+  {
+    private static ChargerService _chargerService;
+
+    public static IChargerService Create()
     {
-        private static FakeChargerService _fakeChargerService;
-        
-        public static IChargerService Create(string charger)
-        {
-            switch (charger.ToUpper())
-            {
-                case "FAKE":
-                    return CreateFakeChargerService();
-                    break;
-                
-                default:
-                    return CreateFakeChargerService();
-                    break;
-            }
-        }
+      if (_chargerService == null)
+      {
+        _chargerService = new ChargerService();
+      }
 
-        private static IChargerService CreateFakeChargerService()
-        {
-            if (_fakeChargerService == null)
-            {
-                _fakeChargerService = new FakeChargerService();
-            }
-
-            return _fakeChargerService;
-        }
+      return _chargerService;
     }
+  }
 }

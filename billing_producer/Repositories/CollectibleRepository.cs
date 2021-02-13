@@ -6,30 +6,30 @@ using Npgsql;
 
 namespace billing_producer.Repositories
 {
-    public class SubscriptionRepository
+    public class CollectibleRepository
     {
         private NpgsqlConnection connection;
 
-        public SubscriptionRepository()
+        public CollectibleRepository()
         {
             connection = DatabaseConnectionFactory.create();
         }
 
-        public List<Subscription> findAll()
+        public List<Collectible> findAll()
         {
-            List<Subscription> Subscriptions = new List<Subscription>();
+            List<Collectible> Collectibles = new List<Collectible>();
             
             string sqlCommand = $"SELECT * " +
-                                $"FROM subscriptions";
+                                $"FROM collectibles";
             NpgsqlCommand cmd = new NpgsqlCommand(sqlCommand, connection);
 
             NpgsqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                Subscriptions.Add(SubscriptionMapper.ToSubscription(reader));
+                Collectibles.Add(CollectibleMapper.ToCollectible(reader));
             }
 
-            return Subscriptions;
+            return Collectibles;
         }
     }
 }

@@ -11,7 +11,7 @@ We can alter a topic to have more partitions if neccessary.
 
 # SQL to setup the tables
 ```
-create table subscriptions (
+create table collectibles (
 	id bigint, 
 	amount_due decimal(15,2),
 	due_day integer,
@@ -20,37 +20,38 @@ create table subscriptions (
 	approval_callback varchar(50),
 	declined_callback varchar(50),
 	timeout_callback varchar(50),
+	payment_method_id bigint,
 	primary key (id)
 );
 
 create table general_ledger (
 	id bigint,
-	subscription_id bigint,
+	collectible_id bigint,
 	paid_at timestamp,
 	amount_paid decimal(15,2),
 	primary key (id)
 );
 
-create table subscription_retries (
+create table collectible_retries (
 	id bigint, 
-	subscription_id bigint,
+	collectible_id bigint,
 	next_try_at timestamp,
 	primary key (id)
 );
 
 create table comments (
 	id bigint,
-	subscription_id bigint,
+	collectible_id bigint,
 	written_at timestamp,
 	message varchar(255),
 	primary key(id)
 );
 
 
-insert into subscriptions values
-  (1, 9.99, 23, current_timestamp, 'fake', 'simple', 'simple', ''), 
-  (2, 10.00, 23, current_timestamp, 'fake', 'simple', 'simple', ''), 
-  (3, 99.01, 23, current_timestamp, 'fake', 'simple', 'simple', '');
+insert into collectibles values
+  (1, 9.99, 23, current_timestamp, 'fake', 'simple', 'simple', '', 1), 
+  (2, 10.00, 23, current_timestamp, 'fake', 'simple', 'simple', '', 2), 
+  (3, 99.01, 23, current_timestamp, 'fake', 'simple', 'simple', '', 3);
 
 
 kafka-topics --create --topic billing --bootstrap-server localhost:9092

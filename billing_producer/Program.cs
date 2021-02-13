@@ -7,14 +7,14 @@ namespace billing_producer
 {
     class Program
     {
-        private static SubscriptionRepository _subscriptionRepository = new SubscriptionRepository();
+        private static CollectibleRepository _collectibleRepository = new CollectibleRepository();
         private static KafkaProducerRepository _kafkaRepository = new KafkaProducerRepository();
         
         static void Main(string[] args)
         {
-            List<Subscription> subscriptions = _subscriptionRepository.findAll();
-            foreach(Subscription subscription in subscriptions) {
-                _kafkaRepository.Create("billing", JsonConvert.SerializeObject(subscriptions));
+            List<Collectible> collectibles = _collectibleRepository.findAll();
+            foreach(Collectible collectible in collectibles) {
+                _kafkaRepository.Create("billing", JsonConvert.SerializeObject(collectible));
             }
         }
     }

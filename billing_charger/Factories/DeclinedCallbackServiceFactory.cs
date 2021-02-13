@@ -6,21 +6,21 @@ namespace billing_charger.Factories
     {
         private static SimpleDeclinedQueuer _simpleDeclinedQueuer;
 
-        public static IDeclinedQueuer Create(string declinedCallbackService)
+        public static IDeclinedQueuer Create(string declinedCallbackQueuer)
         {
-            switch (declinedCallbackService.ToUpper())
+            switch (declinedCallbackQueuer.ToUpper())
             {
                 case "SIMPLE":
-                    return CreateSimpleDeclinedCallbackService();
+                    return CreateSimpleDeclinedCallbackQueuer();
                     break;
                 
                 default:
-                    return CreateSimpleDeclinedCallbackService();
+                    return CreateSimpleDeclinedCallbackQueuer();
                     break;
             }
         }
 
-        private static IDeclinedQueuer CreateSimpleDeclinedCallbackService()
+        private static IDeclinedQueuer CreateSimpleDeclinedCallbackQueuer()
         {
             if (_simpleDeclinedQueuer == null)
             {
