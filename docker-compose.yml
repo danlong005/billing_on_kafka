@@ -25,6 +25,18 @@ services:
       - kafka
     command: dotnet run
 
+  billing_callbacks:
+    build: ./billing_callbacks
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=subscriptions
+      - POSTGRES_HOST=postgres
+    depends_on:
+      - postgres
+      - kafka
+    command: scripts/start_default_consumers.sh
+
   postgres:
     image: postgres:13.1
     environment:
